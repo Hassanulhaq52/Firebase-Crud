@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 
 import 'edit_data_screen.dart';
 
-class WelcomeScreen extends StatelessWidget {
-  const WelcomeScreen({super.key});
+class ReadDataScreen extends StatelessWidget {
+  const ReadDataScreen({super.key});
 
   void deleteData(String docID) async {
     await FirebaseFirestore.instance.collection('Data').doc(docID).delete();

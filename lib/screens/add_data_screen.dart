@@ -1,5 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_project/screens/welcome_screen.dart';
+import 'package:firebase_project/screens/read_data_screen.dart';
 import 'package:flutter/material.dart';
 
 class AddDataScreen extends StatefulWidget {
@@ -47,7 +47,7 @@ class _AddDataScreenState extends State<AddDataScreen> {
                     Navigator.pushReplacement(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => const WelcomeScreen(),
+                          builder: (context) => const ReadDataScreen(),
                         ));
                     ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
                         content: Center(child: Text('Data Added')),
@@ -56,7 +56,7 @@ class _AddDataScreenState extends State<AddDataScreen> {
                 } else {
                   ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
                       content:
-                      Center(child: Text('Please Fill All the Fields')),
+                          Center(child: Text('Please Fill All the Fields')),
                       backgroundColor: Colors.red));
                   print('Error');
                 }

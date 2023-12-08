@@ -6,23 +6,23 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:uuid/uuid.dart';
 
-import 'image_fetch.dart';
+import 'fetch_image_screen.dart';
 
-class FirebaseImageAdd extends StatefulWidget {
-  const FirebaseImageAdd({super.key});
+class AddImageScreen extends StatefulWidget {
+  const AddImageScreen({super.key});
 
   @override
-  State<FirebaseImageAdd> createState() => _FirebaseImageAddState();
+  State<AddImageScreen> createState() => _AddImageScreenState();
 }
 
-class _FirebaseImageAddState extends State<FirebaseImageAdd> {
+class _AddImageScreenState extends State<AddImageScreen> {
   TextEditingController userName = TextEditingController();
   TextEditingController userEmail = TextEditingController();
 
   File? userProfile;
 
   void sendWithImage() async {
-    String userID = Uuid().v1();
+    String userID = const Uuid().v1();
     UploadTask uploadTask = FirebaseStorage.instance
         .ref()
         .child("User-Image")
@@ -30,13 +30,13 @@ class _FirebaseImageAddState extends State<FirebaseImageAdd> {
         .putFile(userProfile!);
     TaskSnapshot taskSnapshot = await uploadTask;
     String userImageURL = await taskSnapshot.ref.getDownloadURL();
-    addUser(imgurl: userImageURL, userid: userID);
+    addUser(imgURL: userImageURL, userid: userID);
   }
 
-  void addUser({String? imgurl, String? userid}) async {
+  void addUser({String? imgURL, String? userid}) async {
     Map<String, dynamic> userDetails = {
       "User-ID": userid,
-      "User-Image": imgurl,
+      "User-Image": imgURL,
       "User-Name": userName.text.toString(),
       "User-Email": userEmail.text.toString()
     };
@@ -44,25 +44,23 @@ class _FirebaseImageAddState extends State<FirebaseImageAdd> {
         .collection("userImageData")
         .doc(userid)
         .set(userDetails);
-    // Navigator.pop(context);
+    Navigator.pop(context);
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        margin: EdgeInsets.symmetric(horizontal: 20),
+        margin: const EdgeInsets.symmetric(horizontal: 20),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            SizedBox(
-              height: 10,
-            ),
+            const SizedBox(height: 10),
             GestureDetector(
               onTap: () async {
                 XFile? selectedImage =
-                await ImagePicker().pickImage(source: ImageSource.gallery);
+                    await ImagePicker().pickImage(source: ImageSource.gallery);
                 if (selectedImage != null) {
                   File convertedImage = File(selectedImage!.path);
                   setState(() {
@@ -70,51 +68,46 @@ class _FirebaseImageAddState extends State<FirebaseImageAdd> {
                   });
                 } else {
                   ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text("Image Not Selected")));
+                      const SnackBar(content: Text("Image Not Selected")));
                 }
               },
               child: CircleAvatar(
                 radius: 40,
                 backgroundColor: Colors.blue,
                 backgroundImage:
-                userProfile != null ? FileImage(userProfile!) : null,
+                    userProfile != null ? FileImage(userProfile!) : null,
               ),
             ),
-            SizedBox(
-              height: 10,
-            ),
+            const SizedBox(height: 10),
             TextFormField(
-              decoration: InputDecoration(label: Text("Enter Your Name")),
+              decoration: const InputDecoration(label: Text("Enter Your Name")),
               controller: userName,
             ),
-            SizedBox(
-              height: 10,
-            ),
+            const SizedBox(height: 10),
             TextFormField(
-              decoration: InputDecoration(label: Text("Enter Your Email")),
+              decoration:
+                  const InputDecoration(label: Text("Enter Your Email")),
               controller: userEmail,
             ),
-            SizedBox(
-              height: 10,
-            ),
+            const SizedBox(height: 10),
             ElevatedButton(
                 onPressed: () {
                   if (userEmail != null && userName != null) {
                     sendWithImage();
 
                     ScaffoldMessenger.of(context)
-                        .showSnackBar(SnackBar(content: Text('Added')));
+                        .showSnackBar(const SnackBar(content: Text('Added')));
                     Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => FirebaseImageFetch(),
+                          builder: (context) => const FetchImageScreen(),
                         ));
                   } else {
                     ScaffoldMessenger.of(context)
-                        .showSnackBar(SnackBar(content: Text('Error')));
+                        .showSnackBar(const SnackBar(content: Text('Error')));
                   }
                 },
-                child: Text("Insert"))
+                child: const Text("Insert"))
           ],
         ),
       ),
