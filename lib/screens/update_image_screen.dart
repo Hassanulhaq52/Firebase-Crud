@@ -9,42 +9,42 @@ import 'package:uuid/uuid.dart';
 import 'fetch_image_screen.dart';
 
 class UpdateImageScreen extends StatefulWidget {
-  String ID;
-  String Name;
-  String UImage;
-  String Email;
+  String id;
+  String name;
+  String userImage;
+  String email;
 
   UpdateImageScreen(
       {super.key,
-      required this.ID,
-      required this.Name,
-      required this.UImage,
-      required this.Email});
+      required this.id,
+      required this.name,
+      required this.userImage,
+      required this.email});
 
   @override
   State<UpdateImageScreen> createState() => _UpdateImageScreenState(
-      Email: Email, Name: Name, UImage: UImage, ID: ID);
+      email: email, name: name, userImage: userImage, id: id);
 }
 
 class _UpdateImageScreenState extends State<UpdateImageScreen> {
-  String ID;
-  String Name;
-  String UImage;
-  String Email;
+  String id;
+  String name;
+  String userImage;
+  String email;
 
   _UpdateImageScreenState(
-      {required this.ID,
-      required this.Name,
-      required this.UImage,
-      required this.Email});
+      {required this.id,
+      required this.name,
+      required this.userImage,
+      required this.email});
 
   File? userProfile;
 
-  TextEditingController userName = TextEditingController();
-  TextEditingController userEmail = TextEditingController();
+  String userName = '';
+  String userEmail = '';
 
   void updateWithImage() async {
-    String userID = Uuid().v1();
+    String userID = const Uuid().v1();
     UploadTask uploadTask = FirebaseStorage.instance
         .ref()
         .child("User-Image")
@@ -67,16 +67,16 @@ class _UpdateImageScreenState extends State<UpdateImageScreen> {
         .update({
       "User-ID": id,
       "User-Image": imgurl,
-      "User-Name": userName.text.toString(),
-      "User-Email": userEmail.text.toString()
+      "User-Name": userName,
+      "User-Email": userEmail
     });
   }
 
   @override
   void initState() {
     // TODO: implement initState
-    userName.text = widget.Name;
-    userEmail.text = widget.Email;
+    userName = widget.name;
+    userEmail = widget.email;
     super.initState();
   }
 
@@ -87,9 +87,7 @@ class _UpdateImageScreenState extends State<UpdateImageScreen> {
         margin: const EdgeInsets.symmetric(horizontal: 20),
         child: Column(
           children: [
-            const SizedBox(
-              height: 10
-            ),
+            const SizedBox(height: 10),
             GestureDetector(
               onTap: () async {
                 XFile? selectedImage =
@@ -101,14 +99,14 @@ class _UpdateImageScreenState extends State<UpdateImageScreen> {
                   });
                 } else {
                   ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text("Image Not Selected")));
+                      const SnackBar(content: Text("Image Not Selected")));
                 }
               },
               child: userProfile == null
                   ? CircleAvatar(
                       radius: 40,
                       backgroundColor: Colors.blue,
-                      backgroundImage: NetworkImage(UImage),
+                      backgroundImage: NetworkImage(userImage),
                     )
                   : CircleAvatar(
                       radius: 40,
@@ -118,14 +116,16 @@ class _UpdateImageScreenState extends State<UpdateImageScreen> {
                     ),
             ),
             const SizedBox(height: 10),
-            TextFormField(
-              decoration: InputDecoration(label: Text("Enter Your Name")),
-              controller: userName,
+            TextField(
+              onChanged: (value) {
+                userName = value;
+              },
             ),
             const SizedBox(height: 10),
-            TextFormField(
-              decoration: InputDecoration(label: Text("Enter Your Email")),
-              controller: userEmail,
+            TextField(
+              onChanged: (value) {
+                userEmail = value;
+              },
             ),
             const SizedBox(height: 10),
             ElevatedButton(
@@ -134,10 +134,10 @@ class _UpdateImageScreenState extends State<UpdateImageScreen> {
                   Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => FetchImageScreen(),
+                        builder: (context) => const FetchImageScreen(),
                       ));
                 },
-                child: Text("Update"))
+                child: const Text("Update"))
           ],
         ),
       ),

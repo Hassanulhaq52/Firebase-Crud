@@ -16,8 +16,8 @@ class AddImageScreen extends StatefulWidget {
 }
 
 class _AddImageScreenState extends State<AddImageScreen> {
-  TextEditingController userName = TextEditingController();
-  TextEditingController userEmail = TextEditingController();
+  String? userName = '';
+  String? userEmail = '';
 
   File? userProfile;
 
@@ -37,14 +37,14 @@ class _AddImageScreenState extends State<AddImageScreen> {
     Map<String, dynamic> userDetails = {
       "User-ID": userid,
       "User-Image": imgURL,
-      "User-Name": userName.text.toString(),
-      "User-Email": userEmail.text.toString()
+      "User-Name": userName,
+      "User-Email": userEmail,
     };
     await FirebaseFirestore.instance
         .collection("userImageData")
         .doc(userid)
         .set(userDetails);
-    Navigator.pop(context);
+    // Navigator.pop(context);
   }
 
   @override
@@ -79,15 +79,16 @@ class _AddImageScreenState extends State<AddImageScreen> {
               ),
             ),
             const SizedBox(height: 10),
-            TextFormField(
-              decoration: const InputDecoration(label: Text("Enter Your Name")),
-              controller: userName,
+            TextField(
+              onChanged: (value) {
+                userName = value;
+              },
             ),
             const SizedBox(height: 10),
-            TextFormField(
-              decoration:
-                  const InputDecoration(label: Text("Enter Your Email")),
-              controller: userEmail,
+            TextField(
+              onChanged: (value) {
+                userEmail = value;
+              },
             ),
             const SizedBox(height: 10),
             ElevatedButton(
